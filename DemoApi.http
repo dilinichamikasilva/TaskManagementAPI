@@ -1,6 +1,46 @@
-@DemoApi_HostAddress = http://localhost:5257
+@DemoApi_HostAddress = https://localhost:7104
 
-GET {{DemoApi_HostAddress}}/weatherforecast/
+GET {{DemoApi_HostAddress}}/api/tasks
 Accept: application/json
 
 ###
+
+POST {{DemoApi_HostAddress}}/api/tasks
+Content-Type: application/json
+
+{
+  "title": "Test task",
+  "description": "Testing POST",
+  "dueDate": "2026-09-30",
+  "projectId": 1
+}
+
+###
+
+GET {{DemoApi_HostAddress}}/api/projects
+Accept: application/json
+
+###
+
+POST {{DemoApi_HostAddress}}/api/projects
+Content-Type: application/json
+
+{
+  "name": "Test project",
+  "description": "Testing POST"
+}
+
+###
+
+GET {{DemoApi_HostAddress}}/api/users
+Accept: application/json
+
+###
+
+POST {{DemoApi_HostAddress}}/api/users
+Content-Type: application/json
+
+{
+  "name": "Test user",
+  "email": "test.user@example.com"
+}
