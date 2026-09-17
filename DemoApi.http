@@ -1,12 +1,36 @@
 @DemoApi_HostAddress = https://localhost:7104
+@token = REPLACE_WITH_TOKEN_FROM_LOGIN_RESPONSE
+
+### Register a new user (returns a JWT)
+POST {{DemoApi_HostAddress}}/api/auth/register
+Content-Type: application/json
+
+{
+  "name": "Test user",
+  "email": "test.user@example.com",
+  "password": "Passw0rd!"
+}
+
+### Login (returns a JWT)
+POST {{DemoApi_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "test.user@example.com",
+  "password": "Passw0rd!"
+}
+
+###
 
 GET {{DemoApi_HostAddress}}/api/tasks
 Accept: application/json
+Authorization: Bearer {{token}}
 
 ###
 
 POST {{DemoApi_HostAddress}}/api/tasks
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
   "title": "Test task",
@@ -19,11 +43,13 @@ Content-Type: application/json
 
 GET {{DemoApi_HostAddress}}/api/projects
 Accept: application/json
+Authorization: Bearer {{token}}
 
 ###
 
 POST {{DemoApi_HostAddress}}/api/projects
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
   "name": "Test project",
@@ -34,13 +60,4 @@ Content-Type: application/json
 
 GET {{DemoApi_HostAddress}}/api/users
 Accept: application/json
-
-###
-
-POST {{DemoApi_HostAddress}}/api/users
-Content-Type: application/json
-
-{
-  "name": "Test user",
-  "email": "test.user@example.com"
-}
+Authorization: Bearer {{token}}

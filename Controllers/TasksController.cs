@@ -1,11 +1,14 @@
-﻿using DemoApi.Models;
+using DemoApi.Dtos.Tasks;
+using DemoApi.Mapping;
 using DemoApi.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DemoApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class TasksController : ControllerBase
     {
         private readonly ITaskService _taskService;
@@ -16,54 +19,39 @@ namespace DemoApi.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<TaskItem>>> GetAllTasks()
+        public async Task<ActionResult<List<TaskDto>>> GetAllTasks()
         {
             var tasks = await _taskService.GetAllTasksAsync();
-            return Ok(tasks);
+            return Ok(tasks.Select(t => t.ToDto()));
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<TaskItem>> GetTaskById(int id)
+        public async Task<ActionResult<TaskDto>> GetTaskById(int id)
         {
             var task = await _taskService.GetTaskByIdAsync(id);
             if (task == null)
             {
                 return NotFound();
             }
-            return Ok(task);
+            return Ok(task.ToDto());
         }
 
         [HttpPost]
-        public async Task<ActionResult<TaskItem>> CreateTask(TaskItem task)
+        public async Task<ActionResult<TaskDto>> CreateTask(CreateTaskDto dto)
         {
-            try
-            {
-                var createdTask = await _taskService.CreateTaskAsync(task);
-                return CreatedAtAction(nameof(GetTaskById), new { id = createdTask.Id }, createdTask);
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var createdTask = await _taskService.CreateTaskAsync(dto.ToEntity());
+            return CreatedAtAction(nameof(GetTaskById), new { id = createdTask.Id }, createdTask.ToDto());
         }
 
-
         [HttpPut("{id}")]
-        public async Task<ActionResult<TaskItem>> UpdateTask(int id, TaskItem task)
+        public async Task<ActionResult<TaskDto>> UpdateTask(int id, UpdateTaskDto dto)
         {
-            try
+            var updatedTask = await _taskService.UpdateTaskAsync(id, dto.ToEntity());
+            if (updatedTask == null)
             {
-                var updatedTask = await _taskService.UpdateTaskAsync(id, task);
-                if (updatedTask == null)
-                {
-                    return NotFound();
-                }
-                return Ok(updatedTask);
+                return NotFound();
             }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return Ok(updatedTask.ToDto());
         }
 
         [HttpDelete("{id}")]

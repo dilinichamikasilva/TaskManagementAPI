@@ -22,12 +22,6 @@ namespace DemoApi.Services
             return await _userRepository.GetByIdAsync(id);
         }
 
-        public async Task<User> CreateUserAsync(User user)
-        {
-            ValidateUser(user);
-            return await _userRepository.AddAsync(user);
-        }
-
         public async Task<User?> UpdateUserAsync(int id, User user)
         {
             ValidateUser(user);

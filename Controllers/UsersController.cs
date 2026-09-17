@@ -1,11 +1,14 @@
-using DemoApi.Models;
+using DemoApi.Dtos.Users;
+using DemoApi.Mapping;
 using DemoApi.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DemoApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -16,53 +19,32 @@ namespace DemoApi.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<User>>> GetAllUsers()
+        public async Task<ActionResult<List<UserDto>>> GetAllUsers()
         {
             var users = await _userService.GetAllUsersAsync();
-            return Ok(users);
+            return Ok(users.Select(u => u.ToDto()));
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetUserById(int id)
+        public async Task<ActionResult<UserDto>> GetUserById(int id)
         {
             var user = await _userService.GetUserByIdAsync(id);
             if (user == null)
             {
                 return NotFound();
             }
-            return Ok(user);
-        }
-
-        [HttpPost]
-        public async Task<ActionResult<User>> CreateUser(User user)
-        {
-            try
-            {
-                var createdUser = await _userService.CreateUserAsync(user);
-                return CreatedAtAction(nameof(GetUserById), new { id = createdUser.Id }, createdUser);
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return Ok(user.ToDto());
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<User>> UpdateUser(int id, User user)
+        public async Task<ActionResult<UserDto>> UpdateUser(int id, UpdateUserDto dto)
         {
-            try
+            var updatedUser = await _userService.UpdateUserAsync(id, dto.ToEntity());
+            if (updatedUser == null)
             {
-                var updatedUser = await _userService.UpdateUserAsync(id, user);
-                if (updatedUser == null)
-                {
-                    return NotFound();
-                }
-                return Ok(updatedUser);
+                return NotFound();
             }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return Ok(updatedUser.ToDto());
         }
 
         [HttpDelete("{id}")]
