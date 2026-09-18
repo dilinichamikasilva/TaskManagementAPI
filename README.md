@@ -1,13 +1,13 @@
 # DemoApi
 
-A REST API for managing projects, tasks, and users, built with **.NET 10** and **Entity Framework Core**. This is a personal learning project used to practice a layered ASP.NET Core architecture, EF Core migrations, JWT authentication, and unit testing — it has been developed and tested locally only, and is not deployed anywhere.
+A REST API for managing projects, tasks, and users, built with **.NET 10** and **Entity Framework Core**. This is a personal learning project used to practice a layered ASP.NET Core architecture, EF Core migrations, JWT authentication, and unit testing - it has been developed and tested locally only, and is not deployed anywhere.
 
 ## What it does
 
-- **Projects** — create and manage projects
-- **Tasks** — CRUD operations on tasks, each linked to a project and optionally assigned to a user, with a status (`ToDo`, `InProgress`, `Done`)
-- **Users** — manage user accounts
-- **Auth** — register/login with email + password; all resource endpoints require a valid JWT
+- **Projects** : create and manage projects
+- **Tasks** : CRUD operations on tasks, each linked to a project and optionally assigned to a user, with a status (`ToDo`, `InProgress`, `Done`)
+- **Users** : manage user accounts
+- **Auth** : register/login with email + password; all resource endpoints require a valid JWT
 
 ## Tech stack
 
@@ -76,7 +76,7 @@ This creates the `DemoApiDb` database in LocalDB with the `Projects`, `Users`, a
 dotnet run
 ```
 
-Swagger UI is available at `https://localhost:<port>/swagger` when running in Development — use it to explore and try out every endpoint.
+Swagger UI is available at `https://localhost:<port>/swagger` when running in Development - use it to explore and try out every endpoint.
 
 ## Authentication flow
 
@@ -84,7 +84,7 @@ Swagger UI is available at `https://localhost:<port>/swagger` when running in De
 2. `POST /api/auth/login` with `{ email, password }` → returns a JWT
 3. Pass the token as `Authorization: Bearer <token>` on every other request
 
-A ready-to-use set of sample requests (register, login, and CRUD calls) is in [`DemoApi.http`](./DemoApi.http) — open it in VS Code or Visual Studio's HTTP client.
+A ready-to-use set of sample requests (register, login, and CRUD calls) is in [`DemoApi.http`](./DemoApi.http) - open it in VS Code or Visual Studio's HTTP client.
 
 ## API endpoints
 
